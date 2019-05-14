@@ -1,0 +1,17 @@
+{
+  "extends": "eslint-config-egg",
+  "parser": "babel-eslint",
+  "rules": {
+    "space-before-function-paren": ["error", "never"],
+    "keyword-spacing": ["error", { "overrides": {
+            "if": { "after": false },
+            "for": { "after": false },
+            "while": { "after": false },
+            "else": { "before": false }
+        }}],
+    "generator-star-spacing": "off",
+    "semi":["error", "never"],
+    "comma-dangle": ["error", "never"],
+    "linebreak-style": "off"
+  }
+}
