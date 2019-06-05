@@ -1,6 +1,6 @@
 'use strict'
 
-// const md5 = require('md5')
+const md5 = require('md5')
 const moment = require('moment')
 const nodemailer = require('nodemailer')
 const MarkdownIt = require('markdown-it')
@@ -34,23 +34,12 @@ const transporter = nodemailer.createTransport({
   auth: private_config.mail.auth
 })
 
-/** ***************
- * 校验规则正则初始化
- */
-
-// 邮箱白名单
-const emailWhilelist = [ 'qq.com', 'gmail.com', '163.com', '126.com', 'msn.com', 'hotmail.com', 'googlemail.com', 'mail.com',
-  'aol.com', 'ask.com', 'live.com', '263.net', '3721.net', 'yiah.net', 'yahoo.com', 'aim.com', 'walla.com', 'foxmail.com',
-  'inbox.com', 'sina.com', '21cn.com', 'soh.com', 'yahoo.com.cn', 'tom.com', 'etang.com', 'eyou.com', '56.com', 'x.cn', 'sina.cn',
-  'chinaren.com', 'sogou.com', 'citiz.com', 'hongkong.com', 'ctimail.com', 'mail.hk.com', 'hknet.com', 'swe.com.hk', 'seed.net.tw' ]
-
-const emailPattern = new RegExp(`${emailWhilelist.join('|')}$`, 'i')
-const namePattern = /^([A-Za-z0-9]|[\u4E00-\uFA29]|[\uE7C7-\uE7F3])+(?:[_-]([A-Za-z0-9]|[\u4E00-\uFA29]|[\uE7C7-\uE7F3])+)*$/
-
 module.exports = {
   salt(salt, str) {
-    // return md5(salt + str)
-    return str
+    return md5(salt + str)
+  },
+  parseWxData(res) {
+    return JSON.parse(res.data.toString())
   },
   mail(mailOptions) {
     mailOptions = mailOptions ? mailOptions : {
@@ -67,27 +56,5 @@ module.exports = {
       }
       this.app.logger.info(`Message send: ${info.response}`)
     })
-  },
-  rule: {
-    userRule: {
-      signInRule: {
-        userName: { required: true, message: '请输入用户名' },
-        password: { required: true, message: '请输入密码' }
-      },
-      signUpRule: {
-        email: [
-          { required: true, message: '请输入邮箱地址' },
-          { type: 'email', message: '邮箱类型错误' },
-          { pattern: emailPattern, message: '不支持的邮箱' }
-        ],
-        nickName: [
-          { required: true, message: '请输入昵称' },
-          { pattern: namePattern, message: '请输入合法的用户名' }
-        ],
-        password: [
-          { required: true, message: '请输入密码' }
-        ]
-      }
-    }
   }
 }
